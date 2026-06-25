@@ -29,6 +29,18 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
         console.error('Error parsing stored user:', e);
         localStorage.removeItem('chefcito-user');
       }
+    } else if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_BYPASS_LOGIN === 'true') {
+      // Development mode: Auto-login with demo user
+      const devUser = {
+        id: 'dev-user-001',
+        name: 'Dev User',
+        email: 'dev@example.com',
+        role: 'Owner',
+        status: 'On Shift',
+      };
+      setUser(devUser);
+      localStorage.setItem('chefcito-user', JSON.stringify(devUser));
+      console.log('[Auth] Development mode: Auto-logged in as', devUser.name);
     }
     setIsLoaded(true);
   }, [setUser]);
